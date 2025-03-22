@@ -42,16 +42,27 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model() 
 
+
 @api_view(['POST'])
 def create_prompt(request):
+    prompt_title = request.data.get('Prompt_title', None)
+    prompt_text = request.data.get('Prompt', None)  # User-entered text prompt
     wikipedia_url = request.data.get('Wikipedia_link', None)
     
-    # If only Wikipedia URL is provided, create an entry with other fields null
-    if wikipedia_url:
-        prompt_instance = Prompt.objects.create(Wikipedia_link=wikipedia_url, User=request.user if request.user.is_authenticated else None)
-        return Response({"message": "Wikipedia URL saved", "id": prompt_instance.id}, status=status.HTTP_201_CREATED)
+    # Ensure at least one of Wikipedia_link or Prompt is provided
+    if not wikipedia_url and not prompt_text:
+        return Response({"error": "At least one of Wikipedia_link or Prompt is required"}, status=status.HTTP_400_BAD_REQUEST)
 
-    return Response({"error": "Wikipedia_link is required"}, status=status.HTTP_400_BAD_REQUEST)
+    # Create and save the prompt instance
+    prompt_instance = Prompt.objects.create(
+        Prompt_title=prompt_title,
+        Prompt=prompt_text,
+        Wikipedia_link=wikipedia_url,
+        User=request.user if request.user.is_authenticated else None
+    )
+
+    return Response({"message": "Prompt saved", "id": prompt_instance.id}, status=status.HTTP_201_CREATED)
+
 
 @api_view(['GET'])
 def get_prompts_by_wikipedia_link(request):
