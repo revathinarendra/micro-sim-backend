@@ -140,7 +140,8 @@ CORS_ALLOWED_ORIGINS = [
     'https://www.wikitube.io',
     'http://localhost:3000',
     'http://127.0.0.1:3000',
-    'https://microsim.vercel.app'
+    'https://microsim.vercel.app',
+    'https://micro-sim-backend.vercel.app'
 ]
 
 STATIC_URL = '/static/'
