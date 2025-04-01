@@ -16,14 +16,25 @@ Including another URLconf
 from django.urls import include
 from django.contrib import admin
 from django.urls import path
-from account.admin import custom_admin_site
+from accounts.admin import custom_admin_site
+from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+
+
+
+from backend.views import CustomGoogleCallbackView, GoogleLogin, google_login_redirect
 
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenVerifyView, TokenRefreshView
 
 urlpatterns = [
     path('custom_admin/', custom_admin_site.urls),
     #path('admin/', admin.site.urls),
-    path('api/', include('account.urls')),
+    path("accounts/", include("allauth.urls")),
+    path('google/login/', GoogleLogin.as_view(), name='google_login'),
+    path("accounts/google/redirect/", google_login_redirect, name="google-login-redirect"),
+    path('accounts/google/login/callback/', 
+         CustomGoogleCallbackView.adapter_view(GoogleOAuth2Adapter),
+         name='google_callback'),
+    path('api/', include('accounts.urls')),
     path('api/', include('flashcard.urls')),
     path('api/token/', TokenObtainPairView.as_view()),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),

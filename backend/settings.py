@@ -11,7 +11,7 @@ load_dotenv()
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 DEBUG = os.environ.get('DEBUG') == 'False'
-
+SITE_ID = 1
 
 ALLOWED_HOSTS = ['.vercel.app', 'localhost', '127.0.0.1']
 
@@ -22,16 +22,27 @@ DJANGO_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
 ]
 
 THIRD_PARTY_APPS = [
     'phonenumber_field',
     'rest_framework',
     'corsheaders',
+    'dj_rest_auth',
+  	'dj_rest_auth.registration',
+    'rest_framework.authtoken',
+
+    # Allauth apps
+    
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.google",
 ]
 
 OUR_APPS = [
-    'account',
+    'accounts',
     'flashcard',
 ]
 
@@ -46,6 +57,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
+
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -139,11 +152,78 @@ AUTHENTICATION_BACKENDS = [
     'backends.custom_authentication_backend.CustomEmailBackend',
    
     'django.contrib.auth.backends.ModelBackend',  # Keep the default backend
+    "allauth.account.auth_backends.AuthenticationBackend", 
+]
+ACCOUNT_SIGNUP_REDIRECT_URL = "/accounts/google/redirect/"
+
+SOCIALACCOUNT_PROVIDERS = {
+    "google": {
+        "APP": {
+            "client_id": os.environ.get("SOCIAL_AUTH_GOOGLE_OAUTH2_KEY"),
+            "secret": os.environ.get("SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET"),
+        },
+        "SCOPE": ["email"],
+        'AUTH_PARAMS': {'access_type': 'online'},
+        'METHOD': 'oauth2',
+        'VERIFIED_EMAIL': True,
+        "OAUTH_PKCE_ENABLED": True,
+    }
+}
+ACCOUNT_ADAPTER = "allauth.account.adapter.DefaultAccountAdapter"
+ACCOUNT_ADAPTER = "backend.adapter.MyAccountAdapter"
+SOCIALACCOUNT_ADAPTER = "backend.adapter.MySocialAccountAdapter"
+
+ACCOUNT_LOGIN_METHODS = {"email"}
+ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]
+
+# Social Auth settings
+ACCOUNT_LOGOUT_ON_GET = True
+
+ACCOUNT_UNIQUE_EMAIL = True
+
+ACCOUNT_EMAIL_VERIFICATION = "none"
+SOCIALACCOUNT_EMAIL_VERIFICATION = "none"
+SOCIALACCOUNT_AUTO_SIGNUP = True
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
+CSRF_COOKIE_NAME = "csrftoken"
+# Session settings
+SESSION_COOKIE_AGE = 60 * 60 * 24 * 7  # 7 days
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+# Redirect URLs
+LOGIN_REDIRECT_URL = "https://microsim.vercel.app"
+ACCOUNT_LOGOUT_REDIRECT_URL = "https://microsim.vercel.app"
+
+# CSRF settings
+CSRF_TRUSTED_ORIGINS = [
+    'https://wikitubeio.vercel.app',
+    'https://micro-sim-backend.vercel.app',
+    'https://microsim.vercel.app'
 ]
 
-# settings.py
-#FRONTEND_URL = 'http://localhost:3000'  # Or your frontend URL
-FRONTEND_URL = 'https://www.wikitube.io/'
+SOCIAL_AUTH_GOOGLE_REDIRECT_URI = 'https://wikitube-new.vercel.app/accounts/google/login/callback/'
+
+
+
+# Frontend URL
+FRONTEND_URL = 'https://microsim.vercel.app'
+
+# Authentication settings
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+SOCIALACCOUNT_EMAIL_VERIFICATION = 'none'
+SOCIALACCOUNT_AUTO_SIGNUP = True
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
+
+# Security settings
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+
+# Additional settings
+SOCIALACCOUNT_LOGIN_ON_GET = True
+
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 EMAIL_BACKEND = "backends.custom_email_backend.CustomEmailBackend"
 EMAIL_HOST = os.environ.get("EMAIL_HOST", "smtp.gmail.com")

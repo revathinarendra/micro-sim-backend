@@ -9,7 +9,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('account', '0004_userprofile_date_of_birth_userprofile_gender'),
+        ('accounts', '0004_userprofile_date_of_birth_userprofile_gender'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 

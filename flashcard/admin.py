@@ -1,7 +1,7 @@
 
 from django.contrib import admin
 from .models import Prompt
-from account.admin import custom_admin_site
+from accounts.admin import custom_admin_site
 
 class PromptAdmin(admin.ModelAdmin):
     list_display = ('Prompt_title', 'User', 'created_at')
