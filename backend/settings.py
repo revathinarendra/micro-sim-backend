@@ -202,7 +202,7 @@ CSRF_TRUSTED_ORIGINS = [
     'https://microsim.vercel.app'
 ]
 
-SOCIAL_AUTH_GOOGLE_REDIRECT_URI = 'https://wikitube-new.vercel.app/accounts/google/login/callback/'
+SOCIAL_AUTH_GOOGLE_REDIRECT_URI = "https://micro-sim-backend.vercel.app/accounts/google/login/callback/"
 
 
 
