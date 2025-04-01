@@ -136,7 +136,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 MEDIA_URL = '/media/'
 
 AUTHENTICATION_BACKENDS = [
-    'backends.custom_auth_backend.CustomEmailBackend',  # Custom authentication backend
+    'backends.custom_authentication_backend.CustomEmailBackend',
+   
     'django.contrib.auth.backends.ModelBackend',  # Keep the default backend
 ]
 

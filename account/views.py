@@ -10,9 +10,12 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.models import User
-from .serializers import SignUpSerializer, UserSerializer, PasswordResetRequestSerializer, PasswordResetSerializer
+from .serializers import LoginSerializer, SignUpSerializer, UserSerializer, PasswordResetRequestSerializer, PasswordResetSerializer
 from .models import EmailVerificationToken
 from django.contrib.auth.hashers import make_password
+from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth import authenticate, get_user_model
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
 
@@ -126,3 +129,29 @@ def password_reset_confirm(request, uidb64, token):
         return Response({'message':'Password reset successfull'}) 
         #return redirect(f'{settings.FRONTEND_URL}reset-password-success')
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+@api_view(['POST'])
+def login_view(request):
+    serializer = LoginSerializer(data=request.data)
+    if serializer.is_valid():
+        email = serializer.validated_data['email']
+        password = serializer.validated_data['password']
+        user = authenticate(request, username=email, password=password)
+
+        if user is not None:
+            if user.is_active:  # Check if the user's account is active
+                refresh = RefreshToken.for_user(user)
+                return Response({
+                    'refresh': str(refresh),
+                    'access': str(refresh.access_token),
+                    'user': {
+                        'email': user.email,
+                        'first_name': user.first_name,
+                        'last_name': user.last_name
+                    }
+                }, status=status.HTTP_200_OK)
+            else:
+                return Response({'error': 'Please verify your email before logging in.'}, status=status.HTTP_403_FORBIDDEN)
+        else:
+            return Response({'error': 'Invalid email or password'}, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
