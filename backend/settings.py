@@ -155,7 +155,8 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',  # Keep the default backend
     "allauth.account.auth_backends.AuthenticationBackend", 
 ]
-ACCOUNT_SIGNUP_REDIRECT_URL = "/accounts/google/redirect/"
+#ACCOUNT_SIGNUP_REDIRECT_URL = "/accounts/google/redirect/" 
+ACCOUNT_SIGNUP_REDIRECT_URL = "https://microsim.vercel.app"
 
 SOCIALACCOUNT_PROVIDERS = {
     "google": {
@@ -168,6 +169,7 @@ SOCIALACCOUNT_PROVIDERS = {
         'METHOD': 'oauth2',
         'VERIFIED_EMAIL': True,
         "OAUTH_PKCE_ENABLED": True,
+        "REDIRECT_URI": "https://micro-sim-backend.vercel.app/accounts/google/login/callback/",
     }
 }
 ACCOUNT_ADAPTER = "allauth.account.adapter.DefaultAccountAdapter"
@@ -203,7 +205,7 @@ CSRF_TRUSTED_ORIGINS = [
     'https://microsim.vercel.app'
 ]
 
-SOCIAL_AUTH_GOOGLE_REDIRECT_URI = "https://micro-sim-backend.vercel.app/accounts/google/login/callback/"
+#SOCIAL_AUTH_GOOGLE_REDIRECT_URI = "https://micro-sim-backend.vercel.app/accounts/google/login/callback/"
 
 
 
