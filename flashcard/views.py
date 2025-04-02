@@ -1,8 +1,8 @@
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .models import Prompt
-from .serializers import PromptSerializer
+from .models import Prompt,Wikipedia
+from .serializers import PromptSerializer,WikipediaSerializer
 from django.contrib.auth.models import User
 from urllib.parse import unquote
 from django.contrib.auth import get_user_model
@@ -76,3 +76,9 @@ def get_prompts_by_wikipedia_link(request):
         serializer = PromptSerializer(prompts, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     return Response({"error": "Wikipedia_link parameter is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def get_code_by_wikipedia_url(request):
+    wikipedia_urls = Wikipedia.objects.all()
+    serializer = WikipediaSerializer(wikipedia_urls,many=True)
+    return Response(serializer.data)

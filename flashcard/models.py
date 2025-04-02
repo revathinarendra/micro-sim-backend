@@ -13,3 +13,14 @@ class Prompt(models.Model):
 
     def __str__(self):
         return self.Prompt_title if self.Prompt_title else "Unnamed Prompt"
+
+    
+class Wikipedia(models.Model):
+    wikipedia_url = models.URLField(max_length=200, blank=True, null=True)
+    mermaid_Code = models.TextField(blank=True, null=True)
+    p5_code = models.TextField(blank=True, null=True)
+    three_Code = models.TextField(blank=True, null=True)
+    d3_code = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.wikipedia_url or  "No url"

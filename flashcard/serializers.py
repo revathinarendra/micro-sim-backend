@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Prompt
+from .models import Prompt,Wikipedia
 
 # class PromptSerializer(serializers.ModelSerializer):
 #     class Meta:
@@ -24,3 +24,8 @@ class PromptSerializer(serializers.ModelSerializer):
             'User': {'required': False, 'allow_null': True}
         }
 
+class WikipediaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Wikipedia
+        fields = ['id', 'wikipedia_url','mermaid_Code', 'p5_code','three_Code','d3_code']
+       
