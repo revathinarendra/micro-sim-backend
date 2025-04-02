@@ -137,7 +137,7 @@ USE_TZ = True
 
 CORS_ALLOWED_ORIGINS = [
     'https://wikitube-django-backend.vercel.app',
-    'https://www.wikitube.io',
+    'https://microsim2.vercel.app',
     'http://localhost:3000',
     'http://127.0.0.1:3000',
     'https://microsim.vercel.app',
@@ -156,7 +156,7 @@ AUTHENTICATION_BACKENDS = [
     "allauth.account.auth_backends.AuthenticationBackend", 
 ]
 #ACCOUNT_SIGNUP_REDIRECT_URL = "/accounts/google/redirect/" 
-ACCOUNT_SIGNUP_REDIRECT_URL = "https://microsim.vercel.app"
+ACCOUNT_SIGNUP_REDIRECT_URL = "https://microsim2.vercel.app"
 
 SOCIALACCOUNT_PROVIDERS = {
     "google": {
@@ -195,12 +195,12 @@ SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
 # Redirect URLs
-LOGIN_REDIRECT_URL = "https://microsim.vercel.app"
+LOGIN_REDIRECT_URL = "https://microsim2.vercel.app/home"
 ACCOUNT_LOGOUT_REDIRECT_URL = "https://microsim.vercel.app"
 
 # CSRF settings
 CSRF_TRUSTED_ORIGINS = [
-    'https://wikitubeio.vercel.app',
+    'https://microsim2.vercel.app',
     'https://micro-sim-backend.vercel.app',
     'https://microsim.vercel.app'
 ]
@@ -210,7 +210,7 @@ CSRF_TRUSTED_ORIGINS = [
 
 
 # Frontend URL
-FRONTEND_URL = 'https://microsim.vercel.app'
+FRONTEND_URL = 'https://microsim2.vercel.app'
 
 # Authentication settings
 ACCOUNT_EMAIL_VERIFICATION = 'none'
