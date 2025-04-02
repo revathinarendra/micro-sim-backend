@@ -156,7 +156,7 @@ AUTHENTICATION_BACKENDS = [
     "allauth.account.auth_backends.AuthenticationBackend", 
 ]
 #ACCOUNT_SIGNUP_REDIRECT_URL = "/accounts/google/redirect/" 
-ACCOUNT_SIGNUP_REDIRECT_URL = "https://microsim2.vercel.app"
+ACCOUNT_SIGNUP_REDIRECT_URL = "https://microsim2.vercel.app/home"
 
 SOCIALACCOUNT_PROVIDERS = {
     "google": {
