@@ -28,6 +28,8 @@ class Wikipedia(models.Model):
     p5_code = models.TextField(blank=True, null=True)
     three_Code = models.TextField(blank=True, null=True)
     d3_code = models.TextField(blank=True, null=True)
+    summary = models.TextField(blank=True, null=True)
+    mcq = models.JSONField(blank=True, null=True)
     code_avaliable = models.BooleanField(default=False)
 
     def extract_slug(self):

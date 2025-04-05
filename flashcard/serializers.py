@@ -26,7 +26,7 @@ class WikipediaSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Wikipedia
-        fields = ['id', 'wikipedia_url', 'slug','mermaid_Code', 'p5_code', 'three_Code', 'd3_code', 'code_avaliable', 'available_codes']
+        fields = ['id', 'wikipedia_url', 'slug','mermaid_Code', 'p5_code', 'three_Code', 'd3_code', 'summary','mcq','code_avaliable', 'available_codes']
 
     def get_code_avaliable(self, obj):
         return bool(obj.wikipedia_url and (obj.mermaid_Code or obj.p5_code or obj.three_Code or obj.d3_code))

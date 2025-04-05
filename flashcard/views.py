@@ -9,6 +9,11 @@ from django.contrib.auth import get_user_model
 import base64
 from rest_framework.generics import RetrieveAPIView
 from django.shortcuts import get_object_or_404
+from rest_framework.views import APIView
+from django.utils.text import slugify
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+
 
 
 # @api_view(['POST'])
@@ -80,9 +85,40 @@ def get_code_by_wikipedia_url(request):
     return Response(serializer.data)
 
 
-
+# get the details of wikipedia urls
 class WikipediaDetailView(RetrieveAPIView):
     queryset = Wikipedia.objects.all()
     serializer_class = WikipediaSerializer
     lookup_field = 'slug'
+
+# post method to save the front data to the wikipedia table
+
+@api_view(['POST'])
+def save_wikipedia(request):
+    wikipedia_url = request.data.get("wikipedia_url")
+    
+    if not wikipedia_url:
+        return Response({"error": "Wikipedia URL is required"}, status=status.HTTP_400_BAD_REQUEST)
+    
+    # Try getting an existing object
+    wikipedia_obj = Wikipedia.objects.filter(wikipedia_url=wikipedia_url).first()
+    
+    if wikipedia_obj:
+        serializer = WikipediaSerializer(wikipedia_obj, data=request.data, partial=True)
+    else:
+        # Create a slug from the URL if not provided
+        if 'slug' not in request.data or not request.data['slug']:
+            request.data['slug'] = slugify(wikipedia_url.split('/')[-1])
+        serializer = WikipediaSerializer(data=request.data)
+    
+    if serializer.is_valid():
+        wikipedia_instance = serializer.save()
+        return Response({
+            "message": "Wikipedia entry saved", 
+            "id": wikipedia_instance.id,
+            "data": serializer.data
+        }, status=status.HTTP_201_CREATED)
+    
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
