@@ -6,6 +6,9 @@ from .serializers import PromptSerializer,WikipediaSerializer
 from django.contrib.auth.models import User
 from urllib.parse import unquote
 from django.contrib.auth import get_user_model
+import base64
+from rest_framework.generics import RetrieveAPIView
+from django.shortcuts import get_object_or_404
 
 
 # @api_view(['POST'])
@@ -75,3 +78,11 @@ def get_code_by_wikipedia_url(request):
     wikipedia_entries = Wikipedia.objects.all()
     serializer = WikipediaSerializer(wikipedia_entries, many=True)
     return Response(serializer.data)
+
+
+
+class WikipediaDetailView(RetrieveAPIView):
+    queryset = Wikipedia.objects.all()
+    serializer_class = WikipediaSerializer
+    lookup_field = 'slug'
+
