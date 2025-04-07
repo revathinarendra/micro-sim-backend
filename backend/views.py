@@ -46,7 +46,7 @@ def google_login_redirect(request):
         token = jwt.encode(payload, settings.SECRET_KEY, algorithm="HS256")
 
         # Create the response and set the token in a cookie
-        response = redirect(f"https://microsim.vercel.app?token={token}")
+        response = redirect(f"https://microsim-2.vercel.app?token={token}")
         response.set_cookie("access_token", token, httponly=True, secure=True, samesite="Lax")
         return response
 
@@ -77,7 +77,7 @@ class CustomGoogleCallbackView(OAuth2CallbackView):
                 token = jwt.encode(payload, settings.SECRET_KEY, algorithm="HS256")
                 
                 # Create redirect response
-                frontend_url = 'https://microsim2.vercel.app'
+                frontend_url = 'https://microsim-2.vercel.app'
                 response = redirect(f"{frontend_url}/home?token={token}")
                 response.set_cookie(
                     "access_token",
@@ -93,5 +93,5 @@ class CustomGoogleCallbackView(OAuth2CallbackView):
             
         except Exception as e:
             # Log the error and redirect to frontend with error parameter
-            frontend_url= 'https://microsim2.vercel.app/'
+            frontend_url= 'https://microsim-2.vercel.app'
             return redirect(f"{frontend_url}?error=auth_failed")

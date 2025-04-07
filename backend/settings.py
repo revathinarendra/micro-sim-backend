@@ -13,7 +13,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = os.environ.get('DEBUG') == 'False'
 SITE_ID = 1
 
-ALLOWED_HOSTS = ['.vercel.app', 'localhost', '127.0.0.1','*','microsim2.vercel.app', 'micro-sim-backend.vercel.app',]
+ALLOWED_HOSTS = ['.vercel.app', 'localhost', '127.0.0.1','*','microsim2.vercel.app','microsim-2.vercel.app', 'micro-sim-backend.vercel.app',]
 
 DJANGO_APPS = [
     'django.contrib.admin',
@@ -141,7 +141,8 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'http://127.0.0.1:3000',
     'https://microsim.vercel.app',
-    'https://micro-sim-backend.vercel.app'
+    'https://micro-sim-backend.vercel.app',
+    'https://microsim-2.vercel.app'
 ]
 
 STATIC_URL = '/static/'
@@ -156,7 +157,7 @@ AUTHENTICATION_BACKENDS = [
     "allauth.account.auth_backends.AuthenticationBackend", 
 ]
 #ACCOUNT_SIGNUP_REDIRECT_URL = "/accounts/google/redirect/" 
-ACCOUNT_SIGNUP_REDIRECT_URL = "https://microsim2.vercel.app/home"
+ACCOUNT_SIGNUP_REDIRECT_URL = "https://microsim-2.vercel.app/home"
 
 SOCIALACCOUNT_PROVIDERS = {
     "google": {
@@ -195,14 +196,15 @@ SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
 # Redirect URLs
-LOGIN_REDIRECT_URL = "https://microsim2.vercel.app/home"
-ACCOUNT_LOGOUT_REDIRECT_URL = "https://microsim.vercel.app"
+LOGIN_REDIRECT_URL = "https://microsim-2.vercel.app/home"
+ACCOUNT_LOGOUT_REDIRECT_URL = "https://microsim-2.vercel.app"
 
 # CSRF settings
 CSRF_TRUSTED_ORIGINS = [
     'https://microsim2.vercel.app',
     'https://micro-sim-backend.vercel.app',
-    'https://microsim.vercel.app'
+    'https://microsim.vercel.app',
+    'https://microsim-2.vercel.app'
 ]
 
 #SOCIAL_AUTH_GOOGLE_REDIRECT_URI = "https://micro-sim-backend.vercel.app/accounts/google/login/callback/"
@@ -210,7 +212,7 @@ CSRF_TRUSTED_ORIGINS = [
 
 
 # Frontend URL
-FRONTEND_URL = 'https://microsim2.vercel.app'
+FRONTEND_URL = 'https://microsim-2.vercel.app'
 
 # Authentication settings
 ACCOUNT_EMAIL_VERIFICATION = 'none'
