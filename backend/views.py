@@ -78,7 +78,7 @@ class CustomGoogleCallbackView(OAuth2CallbackView):
                 
                 # Create redirect response
                 frontend_url = 'https://microsim-2.vercel.app'
-                response = redirect(f"{frontend_url}/home?token={token}")
+                response = redirect(f"{frontend_url}/verify?token={token}")
                 response.set_cookie(
                     "access_token",
                     token,
