@@ -30,27 +30,36 @@ class GoogleLogin(SocialLoginView):
         return Response(response.data)
 
 
+
+
 @login_required
 def google_login_redirect(request):
     """
-    Redirect authenticated users to the frontend landing page after Google login.
+    Redirect authenticated users to the frontend /home page with JWT token.
+    If unauthenticated, redirect to the landing page.
     """
     user = request.user
-    if user.is_authenticated:
-        # Generate a JWT token with expiration
-        payload = {
-            "user_id": user.id,
-            "email": user.email,
-            "exp": datetime.datetime.utcnow() + datetime.timedelta(days=7),  # 7-day expiration
-        }
-        token = jwt.encode(payload, settings.SECRET_KEY, algorithm="HS256")
 
-        # Create the response and set the token in a cookie
-        response = redirect(f"https://microsim-2.vercel.app?token={token}")
-        response.set_cookie("access_token", token, httponly=True, secure=True, samesite="Lax")
-        return response
+    # Generate a JWT token with expiration
+    payload = {
+        "user_id": user.id,
+        "email": user.email,
+        "exp": datetime.datetime.utcnow() + datetime.timedelta(days=7),  # 7-day expiration
+        "iat": datetime.datetime.utcnow()
+    }
+    token = jwt.encode(payload, settings.SECRET_KEY, algorithm="HS256")
 
-    return redirect("/accounts/login/")
+    # Redirect to frontend /home with token
+    response = redirect(f"https://microsim-2.vercel.app/home?access_token={token}")
+    response.set_cookie(
+        "access_token", token,
+        httponly=True,
+        secure=True,
+        samesite="Lax",
+        max_age=7 * 24 * 60 * 60  # 7 days
+    )
+    return response
+
 
 
 class CustomGoogleCallbackView(OAuth2CallbackView):
@@ -74,14 +83,14 @@ class CustomGoogleCallbackView(OAuth2CallbackView):
                     "exp": datetime.datetime.utcnow() + datetime.timedelta(days=7),
                     "iat": datetime.datetime.utcnow(),
                 }
-                token = jwt.encode(payload, settings.SECRET_KEY, algorithm="HS256")
+                access_token = jwt.encode(payload, settings.SECRET_KEY, algorithm="HS256")
                 
                 # Create redirect response
                 frontend_url = 'https://microsim-2.vercel.app'
-                response = redirect(f"{frontend_url}/verify?token={token}")
+                response = redirect(f"{frontend_url}/homeverify?access_token={access_token}")
                 response.set_cookie(
                     "access_token",
-                    token,
+                    access_token,
                     httponly=True,
                     secure=True,
                     samesite="Lax",
