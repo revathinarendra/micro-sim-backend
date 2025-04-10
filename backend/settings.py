@@ -157,7 +157,7 @@ AUTHENTICATION_BACKENDS = [
     "allauth.account.auth_backends.AuthenticationBackend", 
 ]
 #ACCOUNT_SIGNUP_REDIRECT_URL = "/accounts/google/redirect/" 
-ACCOUNT_SIGNUP_REDIRECT_URL = "https://microsim-2.vercel.app/verify?access_token=token"
+ACCOUNT_SIGNUP_REDIRECT_URL = "/accounts/google/redirect/"
 
 SOCIALACCOUNT_PROVIDERS = {
     "google": {
@@ -196,7 +196,8 @@ SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
 # Redirect URLs
-LOGIN_REDIRECT_URL = "https://microsim-2.vercel.app/home"
+
+LOGIN_REDIRECT_URL = "/accounts/google/redirect/"
 ACCOUNT_LOGOUT_REDIRECT_URL = "https://microsim-2.vercel.app"
 
 # CSRF settings

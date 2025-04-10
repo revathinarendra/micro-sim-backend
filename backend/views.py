@@ -50,7 +50,7 @@ def google_login_redirect(request):
     token = jwt.encode(payload, settings.SECRET_KEY, algorithm="HS256")
 
     # Redirect to frontend /home with token
-    response = redirect(f"https://microsim-2.vercel.app/home?access_token={token}")
+    response = redirect(f"https://microsim-2.vercel.app/verify?access_token={token}")
     response.set_cookie(
         "access_token", token,
         httponly=True,
