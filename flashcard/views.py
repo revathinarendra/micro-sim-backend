@@ -155,3 +155,33 @@ def save_wikipedia(request):
         }, status=status.HTTP_201_CREATED)
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class WikipediaUpdateOrCreateView(APIView):
+    def put(self, request, remix_field, *args, **kwargs):
+        # Extract the Wikipedia URL
+        wikipedia_url = request.data.get("wikipedia_url")
+        if not wikipedia_url:
+            return Response({"error": "Wikipedia URL is required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Check if the remix_field is valid (remix1, remix2, remix3)
+        if remix_field not in ['remix1', 'remix2', 'remix3']:
+            return Response({"error": "Invalid remix field."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Build the defaults dictionary dynamically based on the remix_field
+        remix_data = request.data.get(remix_field)
+        if not remix_data:
+            return Response({"error": f"{remix_field} data is required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Prepare the defaults to update the selected remix field
+        defaults = {remix_field: remix_data}
+
+        # Update or create the Wikipedia entry
+        obj, created = Wikipedia.objects.update_or_create(
+            wikipedia_url=wikipedia_url,
+            defaults=defaults
+        )
+
+        # Serialize the updated or created object
+        serializer = WikipediaSerializer(obj)
+        return Response(serializer.data, status=status.HTTP_201_CREATED if created else status.HTTP_200_OK)

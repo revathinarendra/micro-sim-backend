@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import  save_wikipedia
+from .views import  WikipediaUpdateOrCreateView, save_wikipedia
 
 urlpatterns = [
     # post to save prompt and response to the data base
@@ -12,6 +12,8 @@ urlpatterns = [
     path('wikipedia/<slug:slug>/', views.WikipediaDetailView.as_view(), name='wikipedia-detail'),
     # post from the frontend to save wikipedia table
     path('wiki/save/', save_wikipedia, name='save_wikipedia_data_alt'),
+    #PUT METHOD FOR REMIX CODES
+    path('wiki/remix/<str:remix_field>/', WikipediaUpdateOrCreateView.as_view(), name='wikipedia-update-or-create'),
     
     
 

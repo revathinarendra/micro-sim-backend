@@ -31,6 +31,10 @@ class Wikipedia(models.Model):
     summary = models.TextField(blank=True, null=True)
     mcq = models.JSONField(blank=True, null=True)
     code_avaliable = models.BooleanField(default=False)
+    # Remix fields as JSON
+    remix1 = models.JSONField(blank=True, null=True)
+    remix2 = models.JSONField(blank=True, null=True)
+    remix3 = models.JSONField(blank=True, null=True)
 
     def extract_slug(self):
             try:
