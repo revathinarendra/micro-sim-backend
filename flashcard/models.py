@@ -35,6 +35,7 @@ class Wikipedia(models.Model):
     remix1 = models.JSONField(blank=True, null=True)
     remix2 = models.JSONField(blank=True, null=True)
     remix3 = models.JSONField(blank=True, null=True)
+    mcq_content = models.JSONField(blank=True, null=True)
 
     def extract_slug(self):
             try:
@@ -42,11 +43,7 @@ class Wikipedia(models.Model):
             except:
                 return None
 
-    # def save(self, *args, **kwargs):
-    #     if self.wikipedia_url and not self.slug:
-    #         self.slug = self.extract_slug()
-    #     self.code_avaliable = any([self.mermaid_Code, self.p5_code, self.three_Code, self.d3_code])
-    #     super().save(*args, **kwargs)
+    
     
     def save(self, *args, **kwargs):
         if self.wikipedia_url and not self.slug:

@@ -13,7 +13,7 @@ custom_admin_site.register(Prompt, PromptAdmin)
 
 
 class WikipediaAdmin(admin.ModelAdmin):
-    list_display = ('wikipedia_url','slug','mermaid_Code', 'p5_code','three_Code','d3_code','summary','mcq','code_avaliable','remix1','remix2','remix3')
+    list_display = ('wikipedia_url','slug','mermaid_Code', 'p5_code','three_Code','d3_code','summary','mcq','code_avaliable','remix1','remix2','remix3','mcq_content')
     search_fields = ('wikipedia_url',)
 
 custom_admin_site.register(Wikipedia, WikipediaAdmin)

@@ -14,44 +14,7 @@ from django.utils.text import slugify
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 
-
-
-# @api_view(['POST'])
-# def create_prompt(request):
-#     if request.method == 'POST':
-#         data = request.data
-
-#         # Retrieve the user based on the provided email
-#         user_email = data.get('User')
-#         if user_email:
-#             try:
-#                 user = User.objects.get(email=user_email)
-#             except User.DoesNotExist:
-#                 return Response({'error': 'User with this email does not exist.'}, status=status.HTTP_400_BAD_REQUEST)
-#         else:
-#             return Response({'error': 'User email is required.'}, status=status.HTTP_400_BAD_REQUEST)
-
-#         # Associate the prompt with the retrieved user
-#         data['User'] = user.pk
-
-#         serializer = PromptSerializer(data=data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response({
-#                 'message': 'Prompt created successfully.'
-#             }, status=status.HTTP_201_CREATED)
-#         else:
-#             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-#     return Response({'error': 'Invalid request method.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
-
-
-
 User = get_user_model() 
-
-
-
 
 @api_view(['POST'])
 def create_prompt(request):
@@ -92,35 +55,6 @@ class WikipediaDetailView(RetrieveAPIView):
     lookup_field = 'slug'
 
 # post method to save the front data to the wikipedia table
-
-# @api_view(['POST'])
-# def save_wikipedia(request):
-#     wikipedia_url = request.data.get("wikipedia_url")
-    
-#     if not wikipedia_url:
-#         return Response({"error": "Wikipedia URL is required"}, status=status.HTTP_400_BAD_REQUEST)
-    
-#     # Try getting an existing object
-#     wikipedia_obj = Wikipedia.objects.filter(wikipedia_url=wikipedia_url).first()
-    
-#     if wikipedia_obj:
-#         serializer = WikipediaSerializer(wikipedia_obj, data=request.data, partial=True)
-#     else:
-#         # Create a slug from the URL if not provided
-#         if 'slug' not in request.data or not request.data['slug']:
-#             request.data['slug'] = slugify(wikipedia_url.split('/')[-1])
-#         serializer = WikipediaSerializer(data=request.data)
-    
-#     if serializer.is_valid():
-#         wikipedia_instance = serializer.save()
-#         return Response({
-#             "message": "Wikipedia entry saved", 
-#             "id": wikipedia_instance.id,
-#             "data": serializer.data
-#         }, status=status.HTTP_201_CREATED)
-    
-#     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 @api_view(['POST'])
 def save_wikipedia(request):
@@ -165,7 +99,7 @@ class WikipediaUpdateOrCreateView(APIView):
             return Response({"error": "Wikipedia URL is required."}, status=status.HTTP_400_BAD_REQUEST)
 
         # Check if the remix_field is valid (remix1, remix2, remix3)
-        if remix_field not in ['remix1', 'remix2', 'remix3']:
+        if remix_field not in ['remix1', 'remix2', 'remix3','mcq_content']:
             return Response({"error": "Invalid remix field."}, status=status.HTTP_400_BAD_REQUEST)
 
         # Build the defaults dictionary dynamically based on the remix_field
