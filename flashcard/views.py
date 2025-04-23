@@ -109,19 +109,27 @@ class WikipediaUpdateOrCreateView(APIView):
             return Response({"error": f"{remix_field} data is required."}, status=status.HTTP_400_BAD_REQUEST)
 
         if remix_field.startswith("remix"):
-            remix_entry = {
-                "mermaid_code": new_data.get("mermaid_code", ""),
-                "three_code": new_data.get("three_code", ""),
-                "p5_code": new_data.get("p5_code", ""),
-                "d3_code": new_data.get("d3_code", "")
-            }
+            code_keys = ["mermaid_code", "three_code", "p5_code", "d3_code"]
 
-            existing = getattr(obj, remix_field) or []
-            if not isinstance(existing, list):
-                existing = [existing]  # Convert to list if not already
+            # Get the existing list or initialize it
+            existing_list = getattr(obj, remix_field) or []
+            if not existing_list:
+                existing_list = [{}]  # Create one empty entry if list is empty
 
-            existing.append(remix_entry)
-            setattr(obj, remix_field, existing)
+            remix_entry = existing_list[0]  # Always work with the first object
+
+            updated = False
+            for key in code_keys:
+                value = new_data.get(key)
+                if value:  # Only update if the value is non-empty
+                    remix_entry[key] = value
+                    updated = True
+
+            if not updated:
+                return Response({"error": "At least one non-empty code is required."}, status=status.HTTP_400_BAD_REQUEST)
+
+            existing_list[0] = remix_entry  # Update the first entry
+            setattr(obj, remix_field, existing_list)
 
         elif remix_field == "mcq_content":
             def to_list(data):
@@ -138,12 +146,10 @@ class WikipediaUpdateOrCreateView(APIView):
 
             existing = getattr(obj, "mcq_content") or {}
 
-            # Normalize to lists
             for key in ["summary", "code", "simulator"]:
                 if not isinstance(existing.get(key), list):
                     existing[key] = to_list(existing.get(key))
 
-            # Append new values
             existing["summary"].extend(new_summary)
             existing["code"].extend(new_code)
             existing["simulator"].extend(new_simulator)
