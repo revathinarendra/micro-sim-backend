@@ -91,31 +91,65 @@ def save_wikipedia(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+
+
 class WikipediaUpdateOrCreateView(APIView):
     def put(self, request, remix_field, *args, **kwargs):
-        # Extract the Wikipedia URL
         wikipedia_url = request.data.get("wikipedia_url")
         if not wikipedia_url:
             return Response({"error": "Wikipedia URL is required."}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Check if the remix_field is valid (remix1, remix2, remix3)
-        if remix_field not in ['remix1', 'remix2', 'remix3','mcq_content']:
+        if remix_field not in ['remix1', 'remix2', 'remix3', 'mcq_content']:
             return Response({"error": "Invalid remix field."}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Build the defaults dictionary dynamically based on the remix_field
-        remix_data = request.data.get(remix_field)
-        if not remix_data:
+        obj, _ = Wikipedia.objects.get_or_create(wikipedia_url=wikipedia_url)
+
+        new_data = request.data.get(remix_field)
+        if not new_data:
             return Response({"error": f"{remix_field} data is required."}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Prepare the defaults to update the selected remix field
-        defaults = {remix_field: remix_data}
+        if remix_field.startswith("remix"):
+            remix_entry = {
+                "mermaid": new_data.get("mermaid", ""),
+                "threejs": new_data.get("threejs", ""),
+                "p5js": new_data.get("p5js", ""),
+                "d3js": new_data.get("d3js", "")
+            }
 
-        # Update or create the Wikipedia entry
-        obj, created = Wikipedia.objects.update_or_create(
-            wikipedia_url=wikipedia_url,
-            defaults=defaults
-        )
+            existing = getattr(obj, remix_field) or []
+            if not isinstance(existing, list):
+                existing = [existing]  # Convert to list if not already
 
-        # Serialize the updated or created object
+            existing.append(remix_entry)
+            setattr(obj, remix_field, existing)
+
+        elif remix_field == "mcq_content":
+            def to_list(data):
+                if isinstance(data, list):
+                    return data
+                elif isinstance(data, str) and data.strip():
+                    return [data]
+                else:
+                    return []
+
+            new_summary = to_list(new_data.get("summary", []))
+            new_code = to_list(new_data.get("code", []))
+            new_simulator = to_list(new_data.get("simulator", []))
+
+            existing = getattr(obj, "mcq_content") or {}
+
+            # Normalize to lists
+            for key in ["summary", "code", "simulator"]:
+                if not isinstance(existing.get(key), list):
+                    existing[key] = to_list(existing.get(key))
+
+            # Append new values
+            existing["summary"].extend(new_summary)
+            existing["code"].extend(new_code)
+            existing["simulator"].extend(new_simulator)
+
+            setattr(obj, "mcq_content", existing)
+
+        obj.save()
         serializer = WikipediaSerializer(obj)
-        return Response(serializer.data, status=status.HTTP_201_CREATED if created else status.HTTP_200_OK)
+        return Response(serializer.data, status=status.HTTP_200_OK)
