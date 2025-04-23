@@ -110,10 +110,10 @@ class WikipediaUpdateOrCreateView(APIView):
 
         if remix_field.startswith("remix"):
             remix_entry = {
-                "mermaid": new_data.get("mermaid", ""),
-                "threejs": new_data.get("threejs", ""),
-                "p5js": new_data.get("p5js", ""),
-                "d3js": new_data.get("d3js", "")
+                "mermaid_code": new_data.get("mermaid_code", ""),
+                "three_code": new_data.get("three_code", ""),
+                "p5_code": new_data.get("p5_code", ""),
+                "d3_code": new_data.get("d3_code", "")
             }
 
             existing = getattr(obj, remix_field) or []
